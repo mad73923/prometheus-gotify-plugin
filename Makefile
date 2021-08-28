@@ -1,4 +1,6 @@
 BUILDDIR=./build
+GOTIFY_DATA=./gotify_data
+GOTIFY_PLUGINS=$(GOTIFY_DATA)/plugins
 GOTIFY_VERSION=master
 PLUGIN_NAME=prometheus-adapter
 PLUGIN_ENTRY=plugin.go
@@ -13,6 +15,9 @@ download-tools:
 
 create-build-dir:
 	mkdir -p ${BUILDDIR} || true
+
+create-gotify-data-dir:
+	mkdir -p $(GOTIFY_PLUGINS) || true
 
 update-go-mod: create-build-dir
 	wget -LO ${BUILDDIR}/gotify-server.mod https://raw.githubusercontent.com/gotify/server/${GOTIFY_VERSION}/go.mod
@@ -34,5 +39,8 @@ build-linux-arm64: get-gotify-server-go-version update-go-mod
 	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-arm64 ${DOCKER_GO_BUILD} -o ${BUILDDIR}/${PLUGIN_NAME}-linux-arm64${FILE_SUFFIX}.so ${DOCKER_WORKDIR}
 
 build: build-linux-arm-7 build-linux-amd64 build-linux-arm64
+
+copy: create-gotify-data-dir
+	cp ${BUILDDIR}/*.so $(GOTIFY_PLUGINS)
 
 .PHONY: build
