@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  gotify:
+    image: gotify/server
+    ports:
+      - 8080:80
+    environment:
+      - GOTIFY_DEFAULTUSER_PASS=custom
+    volumes:
+      - "./build/prometheus-adapter-linux-amd64for-gotify-v2.0.20.so:/app/data/plugins/prometheus-adapter-linux-amd64for-gotify-v2.0.20.so"
