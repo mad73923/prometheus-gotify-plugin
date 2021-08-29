@@ -2,3 +2,4 @@
 vendor
 build
 *.so
+gotify_data
